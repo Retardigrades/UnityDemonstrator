@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class main : MonoBehaviour {
     public GameObject LedStringPrefab;
-    // Use this for initialization
+   
     bool oneshot ;
     public List<GameObject> Strings;
     public List<GameObject> LEDS;
-	void Start () {
+    public List<Color> colors;
+    // Use this for initialization
+    void Start () {
         LEDS = new List<GameObject>();
         Strings = new List<GameObject>();
+        colors = new List<Color>();
 		if (LedStringPrefab != null)
         {
             for(int ii =0; ii <25; ii++)
@@ -26,10 +29,11 @@ public class main : MonoBehaviour {
 
 
 	}
-	
 	// Update is called once per frame
 	void Update () {
-		if(oneshot)
+
+        #region rotate LedStrings to right position
+        if (oneshot)
         {
             int kk = 0;
             foreach (GameObject ledstring in Strings)
@@ -70,5 +74,25 @@ public class main : MonoBehaviour {
 
             oneshot = false;
         }
-	}
+        #endregion
+
+    }
+
+    void SetColors(List<GameObject> myLeds)
+    {
+        if (myLeds.Count != colors.Count) return;
+        for(int ii = 0; ii < colors.Count; ii++)
+        {
+            myLeds[ii].GetComponent<Material>().color = colors[ii];
+        }
+
+    }
+    void GetColors(List<GameObject> myLeds)
+    {
+        foreach(GameObject led in myLeds)
+        {
+            var col = led.GetComponent<Material>().color;
+            colors.Add(col);
+        }
+    }
 }
