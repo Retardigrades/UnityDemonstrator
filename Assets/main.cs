@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class main : MonoBehaviour {
     public GameObject LedStringPrefab;
-   
+    public Camera Main, Top, Front;
+    public UnityEngine.UI.Text errortext;
+    public UnityEngine.UI.InputField portfield;
     bool oneshot ;
     public List<GameObject> Strings;
     public List<GameObject> LEDS;
     public List<Color> colors;
+    public socketinput socketin;
+
     // Use this for initialization
     void Start () {
+        Main.gameObject.SetActive(false);
+        Top.gameObject.SetActive(false);
+        Front.gameObject.SetActive(true);
+        //socketin = Instantiate(new socketinput());
         LEDS = new List<GameObject>();
         Strings = new List<GameObject>();
         colors = new List<Color>();
@@ -76,18 +84,55 @@ public class main : MonoBehaviour {
         }
         #endregion
 
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Main.gameObject.SetActive(false);
+            Top.gameObject.SetActive(false);
+            Front.gameObject.SetActive(true);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Main.gameObject.SetActive(false);
+            Top.gameObject.SetActive(true);
+            Front.gameObject.SetActive(false);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Main.gameObject.SetActive(true);
+            Top.gameObject.SetActive(false);
+            Front.gameObject.SetActive(false);
+        }
+
+        errortext.text = socketin.debug;
+        colors = socketin.DataOut;
+        if(colors.Count > 0)
+        {
+            SetColors(LEDS);
+        }
+
+    }
+
+    public void Setport()
+    {
+        socketin.Port = System.Convert.ToInt32(portfield.text);
+        socketin.usePort = true;
     }
 
     void SetColors(List<GameObject> myLeds)
     {
-        if (myLeds.Count != colors.Count) return;
-        for(int ii = 0; ii < colors.Count; ii++)
+        if (myLeds.Count != colors.Count)
+        {
+            errortext.text = "Less than 500 colors defined. wont Set!";
+            return;
+        }
+        else errortext.text = "";
+        for (int ii = 0; ii < colors.Count; ii++)
         {
             myLeds[ii].GetComponent<Material>().color = colors[ii];
         }
 
     }
-    void GetColors(List<GameObject> myLeds)
+   public  void GetColors(List<GameObject> myLeds)
     {
         foreach(GameObject led in myLeds)
         {
