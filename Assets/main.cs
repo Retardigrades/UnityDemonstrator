@@ -84,23 +84,27 @@ public class main : MonoBehaviour {
         }
         #endregion
 
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if(Input.GetKeyDown(KeyCode.F1))
         {
             Main.gameObject.SetActive(false);
             Top.gameObject.SetActive(false);
             Front.gameObject.SetActive(true);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.F2))
         {
             Main.gameObject.SetActive(false);
             Top.gameObject.SetActive(true);
             Front.gameObject.SetActive(false);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.F3))
         {
             Main.gameObject.SetActive(true);
             Top.gameObject.SetActive(false);
             Front.gameObject.SetActive(false);
+        }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
         }
 
         errortext.text = socketin.debug;
@@ -115,7 +119,7 @@ public class main : MonoBehaviour {
     public void Setport()
     {
         socketin.Port = System.Convert.ToInt32(portfield.text);
-        socketin.usePort = true;
+        socketin.ListenToPort();
     }
 
     void SetColors(List<GameObject> myLeds)
