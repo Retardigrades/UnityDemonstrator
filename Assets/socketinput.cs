@@ -1,5 +1,5 @@
 ﻿
-using UnityEngine;
+u using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -21,7 +21,7 @@ public class socketinput : MonoBehaviour
     public List<Color> DataOut;
     UdpClient client;
     IPEndPoint endpoint;
-    byte[] DataIn;
+    byte[] DataIn = new byte[1500];
 
 
 
@@ -58,11 +58,10 @@ public class socketinput : MonoBehaviour
         useSocket = false;
         DataOut = new List<Color>();
 
-
     }
 
 
-  public  void ListenToPort()
+    public void ListenToPort()
     {
         if (ReceiveThread != null)
         {
@@ -88,10 +87,18 @@ public class socketinput : MonoBehaviour
             {
                 // Bytes empfangen.
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
-                DataIn = client.Receive(ref anyIP);
+                int len = 0;
+                //Jan is klug :)
+                while (len < DataIn.Length)
+                {
+                    byte[] pkt = client.Receive(ref anyIP);
+                    pkt.CopyTo(DataIn, len);
+                    len += pkt.Length;
+                }
             }
             catch (Exception e)
-            {   print(e.ToString());
+            {
+                print(e.ToString());
                 debug = e.Message + " PortInput was: " + Port.ToString();
             }
         }
@@ -109,8 +116,7 @@ public class socketinput : MonoBehaviour
             Debug.Log("Killed Thread " + ReceiveThread.GetHashCode().ToString());
             ReceiveThread.Abort();
             ReceiveThread = null;
-            
+
         }
     }
 }
-

@@ -50,35 +50,24 @@ public class main : MonoBehaviour {
                 ledstring.transform.Rotate(0f, 14.4f * kk, 0f);
                 kk++;
             }
-
-
+            //vom Jan :)
             for (int ii = 0; ii < Strings.Count; ii++)
             {
-                Debug.Log(ii);
-                Debug.Log("childs :" + Strings[ii].transform.childCount);
-
-                if (Strings[ii].transform.childCount > 0)
+                var off = (ii / 5) % 2;
+                for (int jj = 0; jj < Strings[ii].transform.childCount; jj++)
                 {
-                    if (ii % 2 == 0)
+                    var parent = Strings[ii].transform;
+                    if ((ii + off) % 2 == 0)
                     {
-                        for (int jj = 0; jj < Strings[ii].transform.childCount; jj++)
-                        {
-                            var parent = Strings[ii].transform;
-
-                            LEDS.Add(parent.GetChild(jj).gameObject);
-                        }
+                        LEDS.Add(parent.GetChild(jj).gameObject);
                     }
                     else
                     {
-                        for (int jj = 0; jj < Strings[ii].transform.childCount; jj++)
-                        {
-                            var parent = Strings[ii].transform;
-
-                            LEDS.Add(parent.GetChild((parent.childCount - 1) - jj).gameObject);
-                        }
+                        LEDS.Add(parent.GetChild((parent.childCount - 1) - jj).gameObject);
                     }
                 }
             }
+        
 
             oneshot = false;
         }
@@ -109,7 +98,7 @@ public class main : MonoBehaviour {
 
         errortext.text = socketin.debug;
         colors = socketin.DataOut;
-        if(colors.Count > 0)
+        if(colors.Count == 250)
         {
             SetColors(LEDS);
         }
@@ -124,15 +113,15 @@ public class main : MonoBehaviour {
 
     void SetColors(List<GameObject> myLeds)
     {
-        if (myLeds.Count != colors.Count)
+        if (myLeds.Count != colors.Count/2)
         {
-            errortext.text = "Less than 500 colors defined. wont Set!";
+            errortext.text = "Less than 250 colors defined. wont Set!";
             return;
         }
         else errortext.text = "";
         for (int ii = 0; ii < colors.Count; ii++)
         {
-            myLeds[ii].GetComponent<Material>().color = colors[ii];
+            myLeds[ii].GetComponent<MeshRenderer>().material.SetColor("_MKGlowColor",colors[ii]);
         }
 
     }
@@ -144,4 +133,8 @@ public class main : MonoBehaviour {
             colors.Add(col);
         }
     }
+
+
+
+
 }
